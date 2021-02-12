@@ -1,4 +1,5 @@
-
+import axios from 'axios';
+const baseUrl ="http://localhost:4000";
 let data = {
     test1: { username: "test1", password: "testone", accountn0: 1001, balance: 5000, source: "haripad", destination: "kayankulam" },
     test2: { username: "test2", password: "testtwo", accountn0: 1002, balance: 5000, source: "trivandrum", destination: "kochi" },
@@ -32,7 +33,28 @@ class Taxi {
         localStorage.setItem("currentUser", usname);
 
     }
+    static login(username,password){
+    return axios.post(baseUrl+"/users/login",{
+     username,
+     password
+     },{withCredentials:true})
+    }
+    static registration(username,password,confirmPassword,accountn0){
+        return axios.post(baseUrl+"/users/register",{
+         username,
+         password,
+         confirmPassword,
+         accountn0
+         },{withCredentials:true})
+        }
+        static home(username,amount){
+            return axios.post(baseUrl+"/users/home",{
+             username,
+             amount
+             },{withCredentials:true})
+            }
 
-}
+
+    }
 
 export default Taxi;

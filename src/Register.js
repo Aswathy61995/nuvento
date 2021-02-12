@@ -2,6 +2,19 @@ import React from 'react';
 import Taxi from './Taxi';
 import swal from 'sweetalert';
 import {withRouter} from 'react-router';
+import { Link } from 'react-router-dom';
+import { Formik, Form, Field } from 'formik';
+import* as Yup from 'yup';
+const RegisterSchema= Yup.object().shape({
+    username: Yup.string()
+    .min(2,'Too short!!')
+    .max(15,'Too long!!')
+    .required('Required'),
+    password: Yup.string()
+    .min(2,'Too short!!')
+    .max(15,'Too long!!')
+    .required('Required')
+    });
 class Register extends React.Component {
     state = {
         accountn0: "",
@@ -35,17 +48,28 @@ class Register extends React.Component {
         let password = this.state.password;
         let confirmPassword = this.state.confirmPassword;
         let accountn0 = this.state.accountn0;
-        let data =Taxi.getDetails();
-        if (username in data) {
-            swal("Registration failed!! User already exists", "Please Login!", "error");
-        } else if (password != confirmPassword) {
-            swal("Registration failed!!", "Password and confirmpassword doesnot match", "error");
-        }
-        else {
-            Taxi.addUser(username,password,accountn0);
-            swal("Registration successfull!", "You have registerd sucessfully", "success");
-            this.props.history.push("/");
-        }
+
+       Taxi.registration(username,password,confirmPassword,accountn0)
+       .then(response=>{
+        swal("Registration successfull!",response.data.message, "success");
+        this.props.history.push("/");
+    })
+    .catch(error=>{
+        swal("Registration failed!!",error.response.data.message , "error");
+    });
+
+
+    //   let data =Taxi.getDetails();
+    //     if (username in data) {
+    //         swal("Registration failed!! User already exists", "Please Login!", "error");
+    //     } else if (password != confirmPassword) {
+    //         swal("Registration failed!!", "Password and confirmpassword doesnot match", "error");
+    //     }
+    //     else {
+    //         Taxi.addUser(username,password,accountn0);
+    //         swal("Registration successfull!", "You have registerd sucessfully", "success");
+    //         this.props.history.push("/");
+    //     }
     }
     render() {
         return (
